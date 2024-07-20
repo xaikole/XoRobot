@@ -157,6 +157,3 @@ async def style(c, m):
     
     try:
         await m.message.edit_text(new_text, reply_markup=m.message.reply_markup)
-
-
-__mod_name__ = "𝐅ᴏɴᴛs"
