@@ -55,7 +55,6 @@ opencv-python-headless
 pykeyboard==0.1.5
 wget==3.2
 wikipedia==1.4.0
-bing_image_downloader==1.1.2
 lyricsgenius==3.0.1
 jikanpy==4.3.2
 gtts==2.5.1
