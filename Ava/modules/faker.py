@@ -280,12 +280,12 @@ def generate_fake_passport(country_code="us"):
         "Issuing Authority": fake.company(),
         "Passport Type": fake.random_element(elements=('P', 'D', 'S', 'O')),
         "Profession": fake.job(),
-        "Address": {
-            "Street": fake.street_address(),
-            "City": fake.city(),
-            "State": fake.state(),
-            "Pincode": fake.postcode(),
-            "Country": COUNTRY_CODES.get(country_code, "Unknown Country")
+        "**Address**": {
+            "**Street**": fake.street_address(),
+            "**City**": fake.city(),
+            "**State**": fake.state(),
+            "**Pincode**": fake.postcode(),
+            "**Country**": COUNTRY_CODES.get(country_code, "Unknown Country")
         },
         "Mobile Number": fake.phone_number(),
         "Email": fake.email(),
@@ -306,7 +306,7 @@ def format_passport_details(passport_details):
     Returns:
         str: A formatted string of passport details.
     """
-    response = ["Fake Address:", "▰▰▰▰▰▰▰▰▰▰▰▰▰"]
+    response = ["**Fake Address** ✅", "▰▰▰▰▰▰▰▰▰▰▰▰▰"]
     for key, value in passport_details.items():
         if isinstance(value, dict):
             response.append(f"{key}:")
