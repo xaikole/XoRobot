@@ -311,9 +311,9 @@ def format_passport_details(passport_details):
         if isinstance(value, dict):
             response.append(f"{key}:")
             for sub_key, sub_value in value.items():
-                response.append(f"  •➥ `{sub_key}: {sub_value}`")
+                response.append(f"  •➥ {sub_key}: `{sub_value}`")
         else:
-            response.append(f"•➥ `{key}: {value}`")
+            response.append(f"•➥ {key}: `{value}`")
     
     return "\n".join(response)
 
