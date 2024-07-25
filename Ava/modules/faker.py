@@ -1,8 +1,8 @@
 import random
 import string
 from faker import Faker
-from Ava import Jarvis as app
 from pyrogram import filters
+from Ava import Jarvis as app
 
 # Mapping of country codes to country names
 COUNTRY_CODES = {
@@ -256,6 +256,15 @@ COUNTRY_CODES = {
 }
 
 def generate_fake_passport(country_code="us"):
+    """
+    Generate fake passport details using the specified country code.
+    
+    Parameters:
+        country_code (str): The country code for the passport nationality. Defaults to "us".
+    
+    Returns:
+        dict: A dictionary containing fake passport details.
+    """
     fake = Faker()
     
     passport = {
@@ -263,7 +272,7 @@ def generate_fake_passport(country_code="us"):
         "Gender": fake.random_element(elements=('Male', 'Female')),
         "Passport Number": ''.join(random.choices(string.ascii_uppercase + string.digits, k=9)),
         "Date of Birth": fake.date_of_birth(minimum_age=18, maximum_age=100).strftime('%Y-%m-%d'),
-        "Nationality": country_code.upper(),
+        "Nationality": COUNTRY_CODES.get(country_code, "Unknown Country"),
         "Date of Issue": fake.date_this_decade().strftime('%Y-%m-%d'),
         "Date of Expiry": fake.date_between(start_date='+1y', end_date='+10y').strftime('%Y-%m-%d'),
         "Place of Birth": fake.city(),
@@ -287,13 +296,16 @@ def generate_fake_passport(country_code="us"):
     
     return passport
 
-@app.on_message(filters.command(["fake"], prefixes=[".", "/"]))
-def send_fake_passport_details(client, message):
-    command_text = message.text.split()
-    country_code = command_text[1] if len(command_text) > 1 and command_text[1] in COUNTRY_CODES else "us"
+def format_passport_details(passport_details):
+    """
+    Format the passport details into a readable string.
     
-    passport_details = generate_fake_passport(country_code)
+    Parameters:
+        passport_details (dict): A dictionary containing fake passport details.
     
+    Returns:
+        str: A formatted string of passport details.
+    """
     response = ["Fake Passport Details:", "▰▰▰▰▰▰▰▰▰▰▰▰▰"]
     for key, value in passport_details.items():
         if isinstance(value, dict):
@@ -303,4 +315,21 @@ def send_fake_passport_details(client, message):
         else:
             response.append(f"•➥ `{key}: {value}`")
     
-    app.send_message(message.chat.id, "\n".join(response))
+    return "\n".join(response)
+
+@app.on_message(filters.command(["fake"], prefixes=[".", "/"]))
+async def send_fake_passport_details(client, message):
+    """
+    Handle the command to generate and send fake passport details.
+    
+    Parameters:
+        client: The bot client instance.
+        message: The incoming message object.
+    """
+    command_text = message.text.split()
+    country_code = command_text[1] if len(command_text) > 1 and command_text[1] in COUNTRY_CODES else "us"
+    
+    passport_details = generate_fake_passport(country_code)
+    formatted_details = format_passport_details(passport_details)
+    
+    await client.send_message(message.chat.id, formatted_details)
