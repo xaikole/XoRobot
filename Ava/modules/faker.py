@@ -75,7 +75,6 @@ def generate_fake_passport(country_code="us"):
     return {
         "Name": fake.name(),
         "Gender": fake.random_element(elements=('Male', 'Female')),
-        "Nationality": COUNTRY_CODES.get(country_code, "Unknown Country"),
         "Street Address": fake.street_address(),
         "City": fake.city(),
         "State": fake.state(),
