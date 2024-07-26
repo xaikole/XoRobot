@@ -89,10 +89,15 @@ def generate_fake_passport(country_code="us"):
 
 def format_passport_details(passport_details):
     country = passport_details.get("Country", "Unknown Country")
-    response = [f"**{country} Fake Address Generated** ✅", "▰▰▰▰▰▰▰▰▰▰▰▰▰"]
+    response = [
+        f"**{country} Fake Address Generated** ✅",
+        "", 
+        "▰▰▰▰▰▰▰▰▰▰▰▰▰"
+    ]
     for key, value in passport_details.items():
         response.append(f"•➥ **{key}**: `{value}`")
     return "\n".join(response)
+
 
 @app.on_message(filters.command(["fake"], prefixes=[".", "/"]))
 async def send_fake_passport_details(client, message):
