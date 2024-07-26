@@ -90,7 +90,7 @@ def generate_fake_passport(country_code="us"):
 def format_passport_details(passport_details):
     country = passport_details.get("Country", "Unknown Country")
     response = [
-        f"**{country} Fake Address Generated** ✅",
+        f"**{country} Address Generated** ✅",
         "", 
         "▰▰▰▰▰▰▰▰▰▰▰▰▰"
     ]
