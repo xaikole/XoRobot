@@ -1,1 +1,2 @@
-python3 -m Ava
+worker: python3 -m Ava
+ps:scale worker=1
