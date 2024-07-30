@@ -3,6 +3,7 @@ import string
 from faker import Faker
 from pyrogram import filters
 from Ava import Jarvis as app
+import requests
 
 # Mapping of country codes to country names and their corresponding phone codes
 COUNTRY_CODES = {
@@ -70,11 +71,20 @@ COUNTRY_CODES = {
     "zm": ("Zambia", "+260"), "zw": ("Zimbabwe", "+263")
 }
 
-def generate_fake_passport(country_code="us"):
+def generate_temp_email():
+    response = requests.get("https://api.temp-mail.org/request/domains/format/json")
+    domains = response.json()
     fake = Faker()
-    country_info = COUNTRY_CODES.get(country_code, ("Unknown Country", ""))
-    country_name, country_phone_code = country_info
+    local_part = fake.user_name()
+    temp_email = f"{local_part}@{random.choice(domains)}"
+    return temp_email
+
+def generate_fake_passport(country_code="us"):
+    country_info = COUNTRY_CODES.get(country_code, ("Unknown Country", "", "en_US"))
+    country_name, country_phone_code, locale = country_info
+    fake = Faker(locale)
     mobile_number = f"{country_phone_code} {fake.phone_number()}"
+    temp_email = generate_temp_email()
     return {
         "Name": fake.name(),
         "Gender": fake.random_element(elements=('Male', 'Female')),
@@ -84,9 +94,9 @@ def generate_fake_passport(country_code="us"):
         "Pincode": fake.postcode(),
         "Country": country_name,
         "Mobile Number": mobile_number,
-        "Email": fake.email(),
+        "Email": temp_email,
+        "IBAN": fake.iban(),
     }
-
 
 def format_passport_details(passport_details):
     country = passport_details.get("Country", "Unknown Country")
@@ -98,7 +108,6 @@ def format_passport_details(passport_details):
     for key, value in passport_details.items():
         response.append(f"•➥ **{key}**: `{value}`")
     return "\n".join(response)
-
 
 @app.on_message(filters.command(["fake"], prefixes=[".", "/"]))
 async def send_fake_passport_details(client, message):
