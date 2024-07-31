@@ -2,7 +2,6 @@ import importlib
 import re
 import time
 from sys import argv, version_info
-
 from Abg.helpers.human_read import get_readable_time
 from pyrogram import __version__ as pver
 from telegram import InputMediaPhoto, InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
@@ -601,23 +600,36 @@ def send_startup_message():
         except BadRequest as e:
             log.warning(e.message)
 
-def main():
+async def start_telethon():
+    await telethn.start(bot_token=TOKEN)
+    await telethn.run_until_disconnected()
+
+def start_updater():
     send_startup_message()
 
     log.info(
-        f"ᴜsɪɴɢ ʟᴏɴɢ ᴘᴏʟʟɪɴɢ. ........... ᴇɴᴊᴏʏ ʏᴏᴜʀ ʙᴏᴛ sᴛᴀʀᴛᴇᴅ ᴀs →  {dispatcher.bot.first_name}"
+        f"Using long polling... Enjoy your bot started as → {dispatcher.bot.first_name}"
     )
     updater.start_polling(timeout=15, read_latency=4, drop_pending_updates=True)
-
-    if len(argv) in {1, 3, 4}:
-        telethn.run_until_disconnected()
-    else:
-        telethn.disconnect()
-
     updater.idle()
 
-if __name__ == "__main__":
-    log.info(f"[ᴀᴠᴀ] →  sᴜᴄᴄᴇssғᴜʟʟʏ ʟᴏᴀᴅᴇᴅ ᴍᴏᴅᴜʟᴇs: {str(ALL_MODULES)}")
-    telethn.start(bot_token=TOKEN)
+async def main():
+    log.info(f"[AVA] → Successfully loaded modules: {str(ALL_MODULES)}")
+    
+    # Start telethon in an asyncio task
+    telethon_task = asyncio.create_task(start_telethon())
+
+    # Start pbot (assuming pbot.start() is synchronous, otherwise use await pbot.start())
     pbot.start()
-    main()
+
+    # Run the updater (it blocks)
+    start_updater()
+
+    # Wait for telethon task to complete (which will block until disconnected)
+    await telethon_task
+
+    # Graceful shutdown for aiohttp session
+    await aiohttpsession.close()
+
+if __name__ == "__main__":
+    asyncio.run(main())
