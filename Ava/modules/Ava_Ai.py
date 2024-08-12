@@ -19,23 +19,6 @@ from MukeshAPI import api
 from lexica.constants import languageModels
 from httpx import AsyncClient
 
-# Ava as an Ai Assistant
-@app.on_message(filters.command(["va"], prefixes=["A"]))
-async def chat_gpt(bot, message):
-    try:
-        await bot.send_chat_action(message.chat.id, ChatAction.TYPING)
-        
-        name = message.from_user.first_name if message.from_user else "User"
-        
-        if len(message.command) < 2:
-            await message.reply_text(f"Hello {name}, How can I help you today?")
-        else:
-            query = message.text.split(' ', 1)[1]
-            response = api.gemini(query)["results"]
-            await message.reply_text(f"{response}", parse_mode=ParseMode.MARKDOWN)
-    except Exception as e:
-        await message.reply_text(f"Error: {e}")
-
 # Upscale feature
 async def load_image(image_path: str, url: str) -> str:
     os.makedirs(os.path.dirname(image_path), exist_ok=True)
