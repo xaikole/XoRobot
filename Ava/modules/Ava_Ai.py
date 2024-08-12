@@ -15,7 +15,6 @@ from bing_image_downloader import downloader
 import httpx
 import config
 from Ava import DEEP_API, Jarvis as app
-from MukeshAPI import api
 from lexica.constants import languageModels
 from httpx import AsyncClient
 
