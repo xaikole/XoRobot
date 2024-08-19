@@ -19,7 +19,7 @@ class Config(object):
     SUPPORT_CHAT = getenv("SUPPORT_CHAT", "cari_teman_random_chat")
     LOGGER_ID = int(getenv("LOGGER_ID", "-1002231378383"))
     MONGO_URI = getenv("MONGO_DB_URI")
-    DB_NAME = getenv("DB_NAME", "XaokiBot")
+    DB_NAME = getenv("DB_NAME", "XoRobot")
     REDIS_URL = "redis://default:wK6ZCiclq4iQKYpgfY90v6kd6WdPfEwl@redis-10186.c263.us-east-1-2.ec2.cloud.redislabs.com:10186/default"
     DATABASE_URL = getenv("DATABASE_URL", None)
 
